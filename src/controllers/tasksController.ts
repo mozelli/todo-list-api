@@ -1,14 +1,6 @@
 import { Request, Response } from "express";
-import { Model } from "mongoose";
+import { StringExpressionOperatorReturningNumber } from "mongoose";
 import { Task } from "../models/task";
-
-interface TaskInterface {
-  id: string,
-  title: string,
-  description: string,
-  date: Date,
-  status: string
-}
 
 export class TasksController {
   constructor() {
@@ -17,8 +9,8 @@ export class TasksController {
 
   async getTasks(request: Request, response: Response) {
       Task.find()
-      .then((result) => {
-        return response.status(201).json({message: "", result})
+      .then((tasks) => {
+        return response.status(201).json({message: "", tasks})
       })
       .catch((error) => {
         console.dir(error, {depth: 1});
@@ -28,12 +20,26 @@ export class TasksController {
   }
 
   async createNewTask(request: Request, response: Response) {
-      Task.create(request.body)
-      .then((result) => {
-        return response.status(201).json({ message: "Nova tarefa criada com sucesso.", result })
-      })
-      .catch((error) => {
-        return response.status(500).json({ message: "Falha ao criar nova tarefa.", error });
-      })
+    const { title, description } = request.body;
+
+    Task.create({title, description})
+    .then((task) => {
+      return response.status(201).json({ message: "Nova tarefa criada com sucesso.", task })
+    })
+    .catch((error) => {
+      return response.status(500).json({ message: "Falha ao criar nova tarefa.", error });
+    })
+  }
+
+  async updateTask(request: Request, response: Response) {
+    const id: string = request.params.id;
+    Task.findByIdAndUpdate(id, request.body)
+    .then((task) => {
+      return response.status(201).json({message: "Tarefa atualizada com sucesso.", task})
+    })
+    .catch((error) => {
+      console.dir(error, {depth: 1});
+      return response.status(500).json({message: "Falha ao tantar atualizar a(s) tarefa(s).", error})
+    })
   }
 }
