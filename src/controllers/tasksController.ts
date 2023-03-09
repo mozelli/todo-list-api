@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { StringExpressionOperatorReturningNumber } from "mongoose";
 import { Task } from "../models/task";
 
 export class TasksController {
@@ -13,7 +12,7 @@ export class TasksController {
         return response.status(201).json({message: "", tasks})
       })
       .catch((error) => {
-        console.dir(error, {depth: 1});
+        console.error(error);
         return response.status(500).json({message: "Erro ao tentar recuperar as tarefas.", error});
       })
     
@@ -27,6 +26,7 @@ export class TasksController {
       return response.status(201).json({ message: "Nova tarefa criada com sucesso.", task })
     })
     .catch((error) => {
+      console.error(error);
       return response.status(500).json({ message: "Falha ao criar nova tarefa.", error });
     })
   }
@@ -38,8 +38,20 @@ export class TasksController {
       return response.status(201).json({message: "Tarefa atualizada com sucesso.", task})
     })
     .catch((error) => {
-      console.dir(error, {depth: 1});
+      console.error(error);
       return response.status(500).json({message: "Falha ao tantar atualizar a(s) tarefa(s).", error})
+    })
+  }
+
+  async deleteTask(request: Request, response: Response) {
+    const id: string = request.params.id
+    Task.findByIdAndDelete(id)
+    .then((task) => {
+      return response.status(201).json({message: "Tarefa excluída com sucesso.", task})
+    })
+    .catch((error) => {
+      console.error(error);
+      return response.status(500).json({message: "Falha ao tentar excluir a tarefa.", error})
     })
   }
 }
