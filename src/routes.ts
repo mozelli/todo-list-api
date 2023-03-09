@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express";
-import { TasksController as Tasks } from "./controllers/tasksController";
+import { TasksController } from "./controllers/tasksController";
 
 const routes = Router();
-const TasksController = new Tasks();
+const Tasks = new TasksController();
 
-routes.get("/", (request: Request, response: Response) => TasksController.getTasks(request, response));
-routes.post("/", (request: Request, response: Response) => TasksController.getTasks(request, response));
+routes.get("/", (request: Request, response: Response) => Tasks.getTasks(request, response));
+routes.post("/", (request: Request, response: Response) => Tasks.createNewTask(request, response));
 
 export { routes };
