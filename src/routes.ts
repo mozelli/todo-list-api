@@ -7,5 +7,6 @@ const Tasks = new TasksController();
 routes.get("/", (request: Request, response: Response) => Tasks.getTasks(request, response));
 routes.post("/", (request: Request, response: Response) => Tasks.createNewTask(request, response));
 routes.put("/:id", (request: Request, response: Response) => Tasks.updateTask(request, response));
+routes.delete("/:id", (request: Request, response: Response) => Tasks.deleteTask(request, response))
 
 export { routes };
